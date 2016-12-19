@@ -2,13 +2,14 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 from rest_framework import parsers, renderers, generics, status
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from project.accounts.models import User
 from project.accounts.serializers import (
-    UserRegistrationSerializer, UserProfileSerializer, ResetPasswordSerializer
+    UserRegistrationSerializer, UserProfileSerializer, ResetPasswordSerializer, CustomAuthTokenSerializer
 )
 
 
@@ -21,14 +22,14 @@ class TestView(TemplateView):
 
 class LoginView(APIView):
     """
-    A view that allows users to login providing their username and password.
+    `A view` that allows users to login providing their username and password.
     """
 
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
     renderer_classes = (renderers.JSONRenderer,)
-    serializer_class = AuthTokenSerializer
+    serializer_class = CustomAuthTokenSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -81,3 +82,24 @@ class PasswordResetConfirmView(APIView):
         if not serializer.is_valid():
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"msg": "Password updated successfully."}, status=status.HTTP_200_OK)
+
+
+class UserModelViewset(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+
+    @detail_route(methods=['GET', 'POST'])
+    def test(self, request, *args, **kwargs):
+        """
+        test `123`
+
+        :param request:
+
+        :param args:
+
+        :param kwargs:
+
+        :return:
+        """
+
+        return Response(data='test', status=status.HTTP_200_OK)
