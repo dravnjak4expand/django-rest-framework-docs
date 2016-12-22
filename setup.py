@@ -11,8 +11,7 @@ setup(
     license='BSD',
     description="Documentation for Web APIs made with Django Rest Framework.",
     long_description=open("README.md").read(),
-    install_requires=['Django==1.10.1', 'djangorestframework==3.4.6',
-        'coverage==4.2', 'flake8<3.0.0', 'mkdocs==0.15.3', 'docutils==0.12',
+    install_requires=['coverage==4.2', 'flake8<3.0.0', 'mkdocs==0.15.3', 'docutils==0.12',
         'django-markwhat==1.5'
     ],
     classifiers=[
